@@ -2,7 +2,7 @@
   "name": "Translator",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["webNavigation", "storage"],
+  "permissions": ["webNavigation", "storage", "contextMenus"],
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "js": ["build/distributions/translator.js"]
