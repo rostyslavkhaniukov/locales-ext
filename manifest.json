@@ -3,9 +3,9 @@
   "version": "1.0",
   "description": "Build an Extension!",
   "permissions": ["webNavigation", "storage"],
-  "background": {
-    "scripts": ["build/distributions/translator.js"],
-    "persistent": false
-  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["build/distributions/translator.js"]
+  }],
   "manifest_version": 2
 }

@@ -1,5 +1,5 @@
 fun main() {
-    chrome.webNavigation.onCompleted.addListener {
-        console.log("Hello")
-    }
+    console.log("Hello")
+    val bla = document.getElementById("UserRolesModal")
+    console.log(bla)
 }
