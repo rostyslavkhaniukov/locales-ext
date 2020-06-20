@@ -25,6 +25,7 @@ fun main() {
             }
         }
     })
+
     rootEl.addEventListener("click", {
         e ->
         run {
