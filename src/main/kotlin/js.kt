@@ -1,5 +1,4 @@
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 fun main() {
@@ -31,7 +30,11 @@ fun main() {
         run {
             val target = e.target as HTMLElement
 
-            if (target !== modal.getModalInner() && !modal.getModalInner().contains(target)) {
+            if (
+                    modal.isOpen()
+                    && target !== modal.getModalInner()
+                    && !modal.getModalInner().contains(target)
+            ) {
                 modal.toggleModal()
             }
         }
@@ -57,7 +60,9 @@ fun getConstantName(node: HTMLElement): String {
         return constantAttribute
     }
 
-    if (node.tagName == "INPUT") return (node as HTMLInputElement).placeholder
+    if (node.tagName === "INPUT" || node.tagName === "TEXTAREA") {
+        return node.getAttribute("placeholder").toString()
+    }
     return node.firstChild?.textContent.toString()
 }
 
@@ -69,8 +74,8 @@ fun setConstantAttribute(node: HTMLElement, value: String) {
     node.setAttribute("locale-const", value)
 }
 
-fun isValueConstant(constantName: String): Boolean {
-    return (constantName.toUpperCase() == constantName)
+fun isValueConstant(constantName: String?): Boolean {
+    return constantName?.toUpperCase() == constantName
 }
 
 fun setNewValue(key: String, value: String) {

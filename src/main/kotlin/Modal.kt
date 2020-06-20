@@ -10,6 +10,7 @@ class Modal {
     private val input = createElement("input", "modal-input") as HTMLInputElement
     private val buttonSave = createButton("button", "button-save", "Save")
     private val modalInner = createElement("div", "modal-inner")
+    private var isOpen: Boolean = false
     private lateinit var triggerElement: HTMLElement
 
     private fun createElement (tagName: String, className: String): Element {
@@ -53,6 +54,7 @@ class Modal {
     fun getInput() = input
     fun getModalInner() = modalInner
     fun getTriggerElement() = triggerElement
+    fun isOpen() = isOpen
 
     fun setTriggerElement(element: HTMLElement) {
         triggerElement = element
@@ -67,6 +69,7 @@ class Modal {
     }
 
     fun toggleModal () {
+        isOpen = !isOpen
         modal.classList.toggle("modal-wrapper--showed")
     }
 
