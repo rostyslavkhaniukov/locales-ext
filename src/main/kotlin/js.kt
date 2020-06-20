@@ -9,7 +9,7 @@ fun main() {
 
     val buttonSave = modal.getButtonSave()
 
-    rootEl.addEventListener("contextmenu",  {
+    rootEl.addEventListener("contextmenu", {
         e ->
         run {
             val target = e.target as HTMLElement
@@ -20,19 +20,30 @@ fun main() {
                 setConstantAttribute(target, constantName)
 
                 modal.toggleModal()
+                modal.setTriggerElement(target)
                 modal.setConstantValue(constantName)
             }
         }
     })
+    rootEl.addEventListener("click", {
+        e ->
+        run {
+            val target = e.target as HTMLElement
 
-    buttonSave.addEventListener("click",
-    {
+            if (target !== modal.getModalInner() && !modal.getModalInner().contains(target)) {
+                modal.toggleModal()
+            }
+        }
+    })
+
+    buttonSave.addEventListener("click", {
         val input = modal.getInput()
         val value = input.value
         if (value !== "") {
             val constantName = modal.getConstantValue()
             setNewValue(constantName, value)
 
+            modal.getTriggerElement().textContent = value
             modal.clearInput()
             modal.toggleModal()
         }
@@ -49,18 +60,18 @@ fun getConstantName(node: HTMLElement): String {
     return node.firstChild?.textContent.toString()
 }
 
-fun getConstantAttribute (node: HTMLElement): String?  {
+fun getConstantAttribute(node: HTMLElement): String? {
     return node.getAttribute("locale-const")
 }
 
-fun setConstantAttribute (node: HTMLElement, value: String)  {
+fun setConstantAttribute(node: HTMLElement, value: String) {
     node.setAttribute("locale-const", value)
 }
 
-fun isValueConstant (constantName: String): Boolean {
+fun isValueConstant(constantName: String): Boolean {
     return (constantName.toUpperCase() == constantName)
 }
 
-fun setNewValue (key: String, value: String) {
+fun setNewValue(key: String, value: String) {
     console.log("${key}: $value")
 }
