@@ -10,15 +10,17 @@ class Modal(eventDispatcher: EventDispatcher) {
     private val constantSpan = createElement("span", "constant-value")
     private val input = createElement("input", "modal-input") as HTMLInputElement
     private val buttonSave = createButton("button", "button-save", "Save")
+    private val eventBus: EventDispatcher = eventDispatcher
 
     init {
-        eventDispatcher.subscribe(Events.Invoked) {
+        eventBus.subscribe(Events.Invoked) {
             payload -> run {
-            toggleModal()
-            setConstantValue(payload as String)
+                toggleModal()
+                setConstantValue(payload as String)
+            }
         }
-        }
-        eventDispatcher.subscribe(Events.Finished) {
+
+        eventBus.subscribe(Events.Finished) {
             run {
                 toggleModal()
                 clearInput()
@@ -61,12 +63,19 @@ class Modal(eventDispatcher: EventDispatcher) {
         modalInner.append(modalTitle)
         modalInner.append(innerContent)
         modal.append(modalInner)
+
+        buttonSave.addEventListener("click", {
+            val value = getInputValue()
+            if (value !== "") {
+                val constantName = getConstantValue()
+                eventBus.dispatch(Events.Saved, Pair(constantName, value))
+            }
+        })
     }
 
     fun getModal() = modal
-    fun getConstantValue() = constantSpan.innerHTML
-    fun getButtonSave() = buttonSave
-    fun getInput() = input
+    private fun getConstantValue() = constantSpan.innerHTML
+    private fun getInputValue() = input.value
 
     private fun setConstantValue(value: String) {
         constantSpan.textContent = value

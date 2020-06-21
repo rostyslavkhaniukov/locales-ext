@@ -6,12 +6,10 @@ import kotlin.browser.document
 
 fun main() {
     val rootEl = document.querySelector("body") as HTMLElement
-    val eventDispatcher = EventDispatcher()
-    val modal = Modal(eventDispatcher)
+    val eventBus = EventDispatcher()
+    val modal = Modal(eventBus)
     val state = State()
     rootEl.append(modal.getModal())
-
-    val buttonSave = modal.getButtonSave()
 
     rootEl.addEventListener("contextmenu", {
         e -> run {
@@ -22,24 +20,21 @@ fun main() {
                 state.setTargetElem(target)
                 setConstantAttribute(target, constantName)
 
-                eventDispatcher.dispatch(Events.Invoked, constantName)
+                eventBus.dispatch(Events.Invoked, constantName)
             }
         }
     })
 
-    buttonSave.addEventListener("click", {
-        val input = modal.getInput()
-        val value = input.value
-        if (value !== "") {
-            val constantName = modal.getConstantValue()
+    eventBus.subscribe(Events.Saved) {
+        payload -> run {
+            val (constantName, value) = payload as Pair<String, String>
             val targetEl = state.getTargetElem()
+
             replaceLocaleInTarget(targetEl, value)
             state.addNewConstant(constantName, value)
             state.setCurrentLocaleValue(constantName, value)
-
-            eventDispatcher.dispatch(Events.Finished, {})
         }
-    })
+    }
 }
 
 fun replaceLocaleInTarget(node: HTMLElement?, value: String) {
