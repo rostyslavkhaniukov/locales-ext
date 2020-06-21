@@ -45,7 +45,7 @@ fun main() {
 
 fun replaceLocaleInTarget(node: HTMLElement?, value: String) {
     if (node == null) return
-    if (node.tagName == "INPUT") {
+    if (node.tagName == "INPUT" || node.tagName == "TEXTAREA") {
         (node as HTMLInputElement).placeholder = value
         return
     }

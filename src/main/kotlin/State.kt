@@ -9,13 +9,13 @@ data class State (
         constantsMap[key] = value
     }
 
+    fun getTargetElem () = targetElem
+    fun getCurrentLocaleValue () = currentLocaleValue
+
     fun setTargetElem (element: HTMLElement) {
         targetElem = element
     }
     fun setCurrentLocaleValue (key: String, value: String) {
         currentLocaleValue = Pair(key, value)
     }
-
-    fun getTargetElem () = targetElem
-    fun getCurrentLocaleValue () = currentLocaleValue
 }
