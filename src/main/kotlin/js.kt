@@ -1,14 +1,8 @@
-import exporters.JsonExporter
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 fun main() {
-
-    val exporter = JsonExporter<String, String>()
-    val map = hashMapOf(Pair("a", "b"), Pair("c", "d"))
-    console.log(exporter.export(map))
-
     val rootEl = document.querySelector("body") as HTMLElement
     val modal = Modal()
     rootEl.append(modal.getModal())
