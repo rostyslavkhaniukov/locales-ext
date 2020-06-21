@@ -52,8 +52,6 @@ class Modal {
     fun getConstantValue() = constantSpan.innerHTML
     fun getButtonSave() = buttonSave
     fun getInput() = input
-    fun getModalInner() = modalInner
-    fun getTriggerElement() = triggerElement
     fun isOpen() = isOpen
 
     fun setTriggerElement(element: HTMLElement) {
@@ -71,6 +69,11 @@ class Modal {
     fun toggleModal () {
         isOpen = !isOpen
         modal.classList.toggle("modal-wrapper--showed")
+    }
+
+    fun isModalInner(element: HTMLElement): Boolean {
+        return element == modalInner
+                && modalInner.contains(element)
     }
 
     init {
