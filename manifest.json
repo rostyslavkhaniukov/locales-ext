@@ -6,8 +6,16 @@
   "content_scripts": [{
     "matches": ["<all_urls>"],
     "js": ["build/distributions/locales-ext.js"],
-    "css": ["./index.css"]
+    "css": ["assets/style/index.css"]
   }],
-  "web_accessible_resources": ["build/distributions/locales-ext.js"],
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "browser_action": {
+    "default_title": "Bla",
+    "default_popup": "pages/popup.html?context=Popup"
+  },
   "manifest_version": 2
 }
