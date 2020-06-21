@@ -11,6 +11,23 @@ class Modal(eventDispatcher: EventDispatcher) {
     private val input = createElement("input", "modal-input") as HTMLInputElement
     private val buttonSave = createButton("button", "button-save", "Save")
 
+    init {
+        eventDispatcher.subscribe(Events.Invoked) {
+            payload -> run {
+            toggleModal()
+            setConstantValue(payload as String)
+        }
+        }
+        eventDispatcher.subscribe(Events.Finished) {
+            run {
+                toggleModal()
+                clearInput()
+            }
+        }
+
+        buildModal()
+    }
+
     private fun createElement (tagName: String, className: String): Element {
         val el = document.createElement(tagName)
         el.classList.add(className)
@@ -61,19 +78,5 @@ class Modal(eventDispatcher: EventDispatcher) {
 
     private fun toggleModal () {
         modal.classList.toggle("modal-wrapper--showed")
-    }
-
-    init {
-        eventDispatcher.subscribe(Events.Invoked) { payload -> run {
-            toggleModal()
-            setConstantValue(payload as String)
-        } }
-        eventDispatcher.subscribe(Events.Finished) {
-            run {
-            toggleModal()
-            clearInput()
-        } }
-
-        buildModal()
     }
 }

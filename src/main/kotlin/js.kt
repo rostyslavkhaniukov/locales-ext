@@ -14,8 +14,7 @@ fun main() {
     val buttonSave = modal.getButtonSave()
 
     rootEl.addEventListener("contextmenu", {
-        e ->
-        run {
+        e -> run {
             e.preventDefault()
             val target = e.target as HTMLElement
             val constantName = getConstantName(target)

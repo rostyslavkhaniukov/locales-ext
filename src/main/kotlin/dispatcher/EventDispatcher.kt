@@ -1,7 +1,7 @@
 package dispatcher
 
 class EventDispatcher {
-    private val listeners: HashMap<String, ArrayList<(Any) -> Unit>> = HashMap(10, 0.75F)
+    private val listeners: HashMap<Events, ArrayList<(Any) -> Unit>> = HashMap(10, 0.75F)
 
     fun subscribe(event: Events, listener: (Any) -> Unit): Function<Unit> {
         if (listeners[event] == null) {
