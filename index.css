@@ -9,17 +9,6 @@
     background: rgba(0, 0, 0, .2);
 }
 
-.popup-wrapper {
-    width: 400px;
-}
-
-.popup-wrapper textarea {
-    width: 400px;
-    height: 200px;
-    resize: none;
-    margin: 0;
-}
-
 .modal-wrapper--showed {
     display: flex;
     justify-content: center;
