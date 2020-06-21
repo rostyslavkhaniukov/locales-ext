@@ -1,8 +1,15 @@
+import context.ContextDeterminator
+import context.Contexts
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 fun main() {
+    val determinator = ContextDeterminator()
+    if (determinator.getContext() == Contexts.Popup) {
+        return
+    }
+
     val rootEl = document.querySelector("body") as HTMLElement
     val modal = Modal()
     rootEl.append(modal.getModal())
