@@ -1,9 +1,11 @@
+import dispatcher.EventDispatcher
+import dispatcher.Events
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
-class Modal {
+class Modal(eventDispatcher: EventDispatcher) {
     private val modal = createElement("div", "modal-wrapper")
     private val constantSpan = createElement("span", "constant-value")
     private val input = createElement("input", "modal-input") as HTMLInputElement
@@ -49,19 +51,29 @@ class Modal {
     fun getButtonSave() = buttonSave
     fun getInput() = input
 
-    fun setConstantValue(value: String) {
+    private fun setConstantValue(value: String) {
         constantSpan.textContent = value
     }
 
-    fun clearInput () {
+    private fun clearInput () {
         input.value = ""
     }
 
-    fun toggleModal () {
+    private fun toggleModal () {
         modal.classList.toggle("modal-wrapper--showed")
     }
 
     init {
+        eventDispatcher.subscribe(Events.Invoked) { payload -> run {
+            toggleModal()
+            setConstantValue(payload as String)
+        } }
+        eventDispatcher.subscribe(Events.Finished) {
+            run {
+            toggleModal()
+            clearInput()
+        } }
+
         buildModal()
     }
 }

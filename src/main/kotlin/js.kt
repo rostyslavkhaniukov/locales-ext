@@ -1,10 +1,13 @@
+import dispatcher.EventDispatcher
+import dispatcher.Events
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
 fun main() {
     val rootEl = document.querySelector("body") as HTMLElement
-    val modal = Modal()
+    val eventDispatcher = EventDispatcher()
+    val modal = Modal(eventDispatcher)
     val state = State()
     rootEl.append(modal.getModal())
 
@@ -13,7 +16,6 @@ fun main() {
     rootEl.addEventListener("contextmenu", {
         e ->
         run {
-
             e.preventDefault()
             val target = e.target as HTMLElement
             val constantName = getConstantName(target)
@@ -21,8 +23,7 @@ fun main() {
                 state.setTargetElem(target)
                 setConstantAttribute(target, constantName)
 
-                modal.toggleModal()
-                modal.setConstantValue(constantName)
+                eventDispatcher.dispatch(Events.Invoked, constantName)
             }
         }
     })
@@ -37,8 +38,7 @@ fun main() {
             state.addNewConstant(constantName, value)
             state.setCurrentLocaleValue(constantName, value)
 
-            modal.clearInput()
-            modal.toggleModal()
+            eventDispatcher.dispatch(Events.Finished, {})
         }
     })
 }
