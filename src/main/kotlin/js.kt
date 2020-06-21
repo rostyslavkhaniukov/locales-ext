@@ -5,18 +5,20 @@ import kotlin.browser.document
 fun main() {
     val rootEl = document.querySelector("body") as HTMLElement
     val modal = Modal()
+    val state = State()
     rootEl.append(modal.getModal())
 
     val buttonSave = modal.getButtonSave()
 
-    rootEl.addEventListener("contextmenu",  {
+    rootEl.addEventListener("contextmenu", {
         e ->
         run {
-            val target = e.target as HTMLElement
 
             e.preventDefault()
+            val target = e.target as HTMLElement
             val constantName = getConstantName(target)
             if (isValueConstant(constantName)) {
+                state.setTargetElem(target)
                 setConstantAttribute(target, constantName)
 
                 modal.toggleModal()
@@ -25,18 +27,30 @@ fun main() {
         }
     })
 
-    buttonSave.addEventListener("click",
-    {
+    buttonSave.addEventListener("click", {
         val input = modal.getInput()
         val value = input.value
         if (value !== "") {
             val constantName = modal.getConstantValue()
-            setNewValue(constantName, value)
+            val targetEl = state.getTargetElem()
+            replaceLocaleInTarget(targetEl, value)
+            state.addNewConstant(constantName, value)
+            state.setCurrentLocaleValue(constantName, value)
 
             modal.clearInput()
             modal.toggleModal()
         }
     })
+}
+
+fun replaceLocaleInTarget(node: HTMLElement?, value: String) {
+    if (node == null) return
+    if (node.tagName == "INPUT" || node.tagName == "TEXTAREA") {
+        (node as HTMLInputElement).placeholder = value
+        return
+    }
+
+    node.firstChild?.textContent = value
 }
 
 fun getConstantName(node: HTMLElement): String {
@@ -59,8 +73,4 @@ fun setConstantAttribute (node: HTMLElement, value: String)  {
 
 fun isValueConstant (constantName: String): Boolean {
     return (constantName.toUpperCase() == constantName)
-}
-
-fun setNewValue (key: String, value: String) {
-    console.log("${key}: $value")
 }
