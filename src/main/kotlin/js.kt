@@ -27,6 +27,16 @@ fun main() {
         }
     })
 
+    modal.getModal().addEventListener("click", {
+        e ->
+        run {
+            val target = e.target as HTMLElement
+            if (!modal.isModalInner(target) && modal.isOpen()) {
+                modal.toggleModal()
+            }
+        }
+    })
+
     buttonSave.addEventListener("click", {
         val input = modal.getInput()
         val value = input.value
