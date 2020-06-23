@@ -1,13 +1,34 @@
+import dispatcher.EventDispatcher
+import dispatcher.Events
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLInputElement
 import kotlin.browser.document
 
-class Modal {
+class Modal(eventDispatcher: EventDispatcher) {
     private val modal = createElement("div", "modal-wrapper")
     private val constantSpan = createElement("span", "constant-value")
     private val input = createElement("input", "modal-input") as HTMLInputElement
     private val buttonSave = createButton("button", "button-save", "Save")
+    private val eventBus: EventDispatcher = eventDispatcher
+
+    init {
+        eventBus.subscribe(Events.Invoked) {
+            payload -> run {
+                toggleModal()
+                setConstantValue(payload as String)
+            }
+        }
+
+        eventBus.subscribe(Events.Finished) {
+            run {
+                toggleModal()
+                clearInput()
+            }
+        }
+
+        buildModal()
+    }
 
     private fun createElement (tagName: String, className: String): Element {
         val el = document.createElement(tagName)
@@ -42,26 +63,29 @@ class Modal {
         modalInner.append(modalTitle)
         modalInner.append(innerContent)
         modal.append(modalInner)
+
+        buttonSave.addEventListener("click", {
+            val value = getInputValue()
+            if (value !== "") {
+                val constantName = getConstantValue()
+                eventBus.dispatch(Events.Saved, Pair(constantName, value))
+            }
+        })
     }
 
     fun getModal() = modal
-    fun getConstantValue() = constantSpan.innerHTML
-    fun getButtonSave() = buttonSave
-    fun getInput() = input
+    private fun getConstantValue() = constantSpan.innerHTML
+    private fun getInputValue() = input.value
 
-    fun setConstantValue(value: String) {
+    private fun setConstantValue(value: String) {
         constantSpan.textContent = value
     }
 
-    fun clearInput () {
+    private fun clearInput () {
         input.value = ""
     }
 
-    fun toggleModal () {
+    private fun toggleModal () {
         modal.classList.toggle("modal-wrapper--showed")
-    }
-
-    init {
-        buildModal()
     }
 }
